@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 
 export default function ProfilePage(){
     return(
