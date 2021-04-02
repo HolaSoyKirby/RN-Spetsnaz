@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import UserForm from '../components/user_form';
 
 export default function RegisterForm(){
@@ -33,13 +33,14 @@ const styles = StyleSheet.create({
     formView: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 30,
+        marginBottom: '20%',
         marginTop: 50
     },
     registrarseText: {
         fontSize: 30,
         fontFamily: 'sans-serif-medium',
-        marginBottom: 20,
+        marginBottom: '20%',
+        marginTop: '10%',
         color: '#000000'
     },
 

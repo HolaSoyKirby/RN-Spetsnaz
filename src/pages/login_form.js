@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
     formView: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 30
+        marginBottom: 20
     },
     ingresarText: {
         fontSize: 20,
         fontFamily: 'sans-serif-medium',
-        marginBottom: 10
+        marginBottom: '5%'
     },
 
     ///////////// BUTTON /////////////

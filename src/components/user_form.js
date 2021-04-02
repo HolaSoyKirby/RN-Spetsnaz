@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     formTextInput: {
-        marginBottom: 10,
+        marginBottom: '10%',
         fontSize: 18,
         borderBottomWidth: 2,
         borderBottomColor: '#aaaaaa'
