@@ -22,7 +22,7 @@ export default function UserForm(){
 const styles = StyleSheet.create({
     formText:{
         fontSize: 18,
-        color: 'red',
+        color: '#de0010',
         fontFamily: 'sans-serif',
         marginBottom: 5
     },

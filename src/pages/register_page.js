@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import UserForm from '../components/user_form';
 
-export default function RegisterForm(){
+export default function RegisterPage({navigation}){
     return(
         <>
             <View

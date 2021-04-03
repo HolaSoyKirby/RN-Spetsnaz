@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 
-export default function ProfilePage(){
+export default function ProfilePage({navigation}){
     return(
         <>
             <View
@@ -13,7 +13,8 @@ export default function ProfilePage(){
                     style={styles.userName}>John Doe</Text>
             </View>
             <TouchableOpacity
-                style={styles.loginButtonView}>
+                style={styles.loginButtonView}
+                onPress = {()=>{}}>
                 <Text
                     style={styles.loginText}>Cerrar Sesión</Text>
             </TouchableOpacity>

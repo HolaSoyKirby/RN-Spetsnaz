@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import UserForm from '../components/user_form';
 
-export default function LoginForm(){
+export default function LoginPage({navigation}){
     return(
         <>
             <View
@@ -20,7 +20,8 @@ export default function LoginForm(){
                 <UserForm/>
             </View>
             <TouchableOpacity
-                style={styles.loginButtonView}>
+                style={styles.loginButtonView}
+                onPress = {()=>navigation.navigate('DrawerNavigation')} title= "Next Screen">
                 <Text
                     style={styles.loginText}>Ingresar</Text>
             </TouchableOpacity>

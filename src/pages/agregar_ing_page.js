@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
 
-export default function AgregarIng(){
+export default function AgregarIngPage(){
     return(
         <>
             <View
