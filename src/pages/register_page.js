@@ -12,7 +12,8 @@ export default function RegisterPage({navigation}){
                 <UserForm/>
             </View>
             <TouchableOpacity
-                style={styles.registerButtonView}>
+                style={styles.registerButtonView}
+                onPress = {() => navigation.replace('DrawerNavigation')}>
                 <Text
                     style={styles.registerText}>Crear cuenta</Text>
             </TouchableOpacity>
@@ -21,7 +22,7 @@ export default function RegisterPage({navigation}){
                     style={styles.loginAdviceText}>¿Ya tiene una cuenta? 
                     <Text
                         style={styles.loginText}
-                        onPress={() => {}}> Iniciar Sesión</Text>
+                        onPress={() => navigation.goBack()}> Iniciar Sesión</Text>
                 </Text>
             </View>
         </>

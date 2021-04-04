@@ -21,14 +21,14 @@ export default function LoginPage({navigation}){
             </View>
             <TouchableOpacity
                 style={styles.loginButtonView}
-                onPress = {()=>navigation.navigate('DrawerNavigation')} title= "Next Screen">
+                onPress = {()=>navigation.replace('DrawerNavigation')} title= "Next Screen">
                 <Text
                     style={styles.loginText}>Ingresar</Text>
             </TouchableOpacity>
             <View>
                 <Text
                     style={styles.registrarseText}
-                    onPress={() => {}}>Registrarse</Text>
+                    onPress={() => navigation.navigate('RegisterPage')}>Registrarse</Text>
             </View>
         </>
     );

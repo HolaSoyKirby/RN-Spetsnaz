@@ -14,7 +14,7 @@ export default function ProfilePage({navigation}){
             </View>
             <TouchableOpacity
                 style={styles.loginButtonView}
-                onPress = {()=>{}}>
+                onPress = {()=>navigation.navigate('LoginNavigation')}>
                 <Text
                     style={styles.loginText}>Cerrar Sesión</Text>
             </TouchableOpacity>
