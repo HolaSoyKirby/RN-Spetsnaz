@@ -1,9 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
 import LoginPage from '../pages/login_page';
 import RegisterPage from '../pages/register_page';
-import AgregarIngPage from '../pages/agregar_ing_page';
-import ProfilePage from '../pages/profile_page';
 import MenuNavigation from './menu_navigation';
 
 import { NavigationContainer } from '@react-navigation/native';
