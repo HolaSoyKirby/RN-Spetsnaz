@@ -1,30 +1,32 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import UserForm from '../components/user_form';
 
 export default function RegisterPage({navigation}){
     return(
         <>
-            <View
-                style={styles.formView}>
-                <Text
-                    style={styles.registrarseText}>Crear cuenta</Text>
-                <UserForm/>
-            </View>
-            <TouchableOpacity
-                style={styles.registerButtonView}
-                onPress = {() => navigation.replace('DrawerNavigation')}>
-                <Text
-                    style={styles.registerText}>Crear cuenta</Text>
-            </TouchableOpacity>
-            <View>
-                <Text
-                    style={styles.loginAdviceText}>¿Ya tiene una cuenta? 
+            <ScrollView>
+                <View
+                    style={styles.formView}>
                     <Text
-                        style={styles.loginText}
-                        onPress={() => navigation.goBack()}> Iniciar Sesión</Text>
-                </Text>
-            </View>
+                        style={styles.registrarseText}>Crear cuenta</Text>
+                    <UserForm/>
+                </View>
+                <TouchableOpacity
+                    style={styles.registerButtonView}
+                    onPress = {() => navigation.replace('MenuNavigation')}>
+                    <Text
+                        style={styles.registerText}>Crear cuenta</Text>
+                </TouchableOpacity>
+                <View>
+                    <Text
+                        style={styles.loginAdviceText}>¿Ya tiene una cuenta? 
+                        <Text
+                            style={styles.loginText}
+                            onPress={() => navigation.goBack()}> Iniciar Sesión</Text>
+                    </Text>
+                </View>
+            </ScrollView>
         </>
     );
 }

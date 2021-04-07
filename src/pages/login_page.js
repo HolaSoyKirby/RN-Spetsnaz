@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import UserForm from '../components/user_form';
 
 export default function LoginPage({navigation}){
     return(
         <>
+        <ScrollView>
             <View
                 style={styles.logoView}>
                 <Image
@@ -21,7 +22,7 @@ export default function LoginPage({navigation}){
             </View>
             <TouchableOpacity
                 style={styles.loginButtonView}
-                onPress = {()=>navigation.replace('DrawerNavigation')} title= "Next Screen">
+                onPress = {()=>navigation.replace('MenuNavigation')} title= "Next Screen">
                 <Text
                     style={styles.loginText}>Ingresar</Text>
             </TouchableOpacity>
@@ -30,6 +31,7 @@ export default function LoginPage({navigation}){
                     style={styles.registrarseText}
                     onPress={() => navigation.navigate('RegisterPage')}>Registrarse</Text>
             </View>
+        </ScrollView>
         </>
     );
 }
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
         marginBottom: '5%'
     },
 
-    ///////////// BUTTON /////////////
+    ////////////// BUTTON //////////////
     loginButtonView: {
         height: 60,
         marginLeft: 30,
