@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
 
-export default function AgregarIngPage(){
+export default function AgregarIngPage({navigation}){
     return(
         <>
             <View
@@ -45,7 +45,9 @@ export default function AgregarIngPage(){
                 />
             </View>
             <TouchableOpacity
-                style={styles.ingredienteButtonView}>
+                style={styles.ingredienteButtonView}
+                onPress={() => navigation.goBack()}
+                >
                 <Text
                     style={styles.ingText}>Agregar Ingrediente</Text>
             </TouchableOpacity>

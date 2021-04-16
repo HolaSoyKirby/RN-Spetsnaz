@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { Text, Image } from 'react-native';
 
 export default function PlatillosPage({navigation}){
     return(
