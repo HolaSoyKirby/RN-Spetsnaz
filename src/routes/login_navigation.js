@@ -2,10 +2,12 @@ import React from 'react';
 import LoginPage from '../pages/login_page';
 import RegisterPage from '../pages/register_page';
 import MenuNavigation from './menu_navigation';
+import AgregarPlatPage from '../pages/agregar_plat_page';
 import AgregarIngredientePage from '../pages/agregar_ing_page';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import IngredientesPlatilloPage from '../pages/ingredientes_platillo_page';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +21,9 @@ export default function LoginNavigation() {
       <Stack.Screen name = "LoginPage" component={LoginPage} />
       <Stack.Screen name = "MenuNavigation" component = {MenuNavigation}/>
       <Stack.Screen name = "RegisterPage" component = {RegisterPage}/>
+      <Stack.Screen name = "AgregarPlatillo" component = {AgregarPlatPage}/>
       <Stack.Screen name = "AgregarIngrediente" component = {AgregarIngredientePage}/>
+      <Stack.Screen name = "IngredientesPlatillo" component = {IngredientesPlatilloPage}/>
     </Stack.Navigator>
   </NavigationContainer>
   );

@@ -22,7 +22,7 @@ export default function LoginPage({navigation}){
             </View>
             <TouchableOpacity
                 style={styles.loginButtonView}
-                onPress = {()=>navigation.replace('MenuNavigation')} title= "Next Screen">
+                onPress = {()=>navigation.navigate('MenuNavigation')}>
                 <Text
                     style={styles.loginText}>Ingresar</Text>
             </TouchableOpacity>
