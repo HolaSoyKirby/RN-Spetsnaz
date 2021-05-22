@@ -64,10 +64,13 @@ export default function AlmacenPage({navigation}){
             style={styles.list}
             data={ingredientes}
             renderItem={({ item }) => (
-                <View style={styles.elementView}>
-                    <Text style={styles.elementText1}>{item.Nombre}</Text>
-                    <Text style={styles.elementText2}>{item.Cantidad}</Text>
-                </View>
+                <TouchableOpacity
+                    onPress = {()=>navigation.navigate('AgregarCantidad')}>
+                    <View style={styles.elementView}>
+                        <Text style={styles.elementText1}>{item.Nombre}</Text>
+                        <Text style={styles.elementText2}>{item.Cantidad}</Text>
+                    </View>
+                </TouchableOpacity>
               )}
             keyExtractor={item => `${item.Nombre}`}/>
             <TouchableOpacity
