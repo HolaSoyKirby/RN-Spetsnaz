@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 
-export default function ProfilePage({navigation}){
+export default function ProfilePage({navigation, route}){
+    /*const si = route;
+    const {user} = si.params;*/
     return(
         <>
             <View
@@ -10,7 +12,7 @@ export default function ProfilePage({navigation}){
                     source={ require('../img/user.png') }
                     style={styles.userImg} />
                 <Text
-                    style={styles.userName}>John Doe</Text>
+                    style={styles.userName}>{'user'}</Text>
             </View>
             <TouchableOpacity
                 style={styles.loginButtonView}

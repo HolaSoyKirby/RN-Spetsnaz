@@ -65,6 +65,7 @@ const ingredientes = [
 ];
 
 export default function PlatillosPage({navigation}){
+
     return(
         <>
             <View

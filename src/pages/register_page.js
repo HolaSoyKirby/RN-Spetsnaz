@@ -1,8 +1,45 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import UserForm from '../components/user_form';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import firebase from '../utils/firebase';
+import {validateEmail} from '../utils/validation';
 
 export default function RegisterPage({navigation}){
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [emailError, setEmailError] = useState('');
+
+    const register = () => {
+        setEmailError('');
+        if(!email) {
+            setEmailError('Ingrese un Correo Electrónico');
+        }
+        else if (!password) {
+            setEmailError('Ingrese una Contraseña');
+        }
+        else if (!validateEmail(email)) {
+            setEmailError('Ingrese un Correo Electrónico Válido');
+        }
+        else if(password.length < 6){
+            setEmailError('Ingrese una contraseña de 6 caracteres mínimo');
+        }
+        else {
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    console.log('cuenta creada');
+                    navigation.replace('MenuNavigation', {
+                        screen: 'PlatillosPage',
+                        params: { user: email },
+                      });
+                })
+                .catch((error)=>{
+                    console.log(error.message);
+                    setEmailError(error.message);
+                });
+        }
+    }
+
+
+
     return(
         <>
             <ScrollView>
@@ -10,11 +47,32 @@ export default function RegisterPage({navigation}){
                     style={styles.formView}>
                     <Text
                         style={styles.registrarseText}>Crear cuenta</Text>
-                    <UserForm/>
+                    <Text
+                        style = {styles.formText}>Usuario:</Text>
+                    <TextInput
+                        placeholder = "Tu usuario"
+                        style={styles.formTextInput}
+                        onChange={(e)=>{
+                            setEmail(e.nativeEvent.text);
+                            console.log(email);
+                        }}/>
+                    <Text
+                        style = {styles.formText}>Contraseña</Text>
+                    <TextInput
+                        placeholder = "Contraseña"
+                        secureTextEntry={true}
+                        style={styles.formTextInput}
+                        onChange={(e)=>{
+                            setPassword(e.nativeEvent.text);
+                            console.log(password);
+                        }} />
                 </View>
+                <Text style={styles.textError}>{emailError}</Text>
                 <TouchableOpacity
                     style={styles.registerButtonView}
-                    onPress = {() => navigation.replace('MenuNavigation')}>
+                    onPress = {()=>{
+                        register();
+                    }} /*{() => navigation.replace('MenuNavigation')}*/>
                     <Text
                         style={styles.registerText}>Crear cuenta</Text>
                 </TouchableOpacity>
@@ -45,6 +103,25 @@ const styles = StyleSheet.create({
         marginBottom: '20%',
         marginTop: '10%',
         color: '#000000'
+    },
+    formText:{
+        fontSize: 18,
+        color: '#de0010',
+        fontFamily: 'sans-serif',
+        marginBottom: 5
+    },
+    formTextInput: {
+        marginBottom: '10%',
+        fontSize: 18,
+        borderBottomWidth: 2,
+        borderBottomColor: '#aaaaaa'
+    },
+
+    textError: {
+        color: 'red', 
+        textAlign: 'center',
+        fontSize: 18,
+        marginBottom: 15
     },
 
     ///////////// BUTTON /////////////
