@@ -25,12 +25,7 @@ export default function LoginPage({navigation}){
             firebase.auth().signInWithEmailAndPassword(email, password)
             .then(()=>{
                 console.log("ok");
-                navigation.push('MenuNavigation', {
-                    screen: 'ProfilePage',
-                    initial: false,
-                    params: {
-                        user: email},
-                });
+                navigation.navigate('MenuNavigation', {user: email});
             })
             .catch((error)=>{
                 console.log(error.message);

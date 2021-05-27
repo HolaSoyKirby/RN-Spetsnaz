@@ -7,12 +7,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
-export default function MenuNavigation() {
+export default function MenuNavigation({navigation, route}) {
+
     return (
         <Drawer.Navigator initialRouteName="PlatillosPage">
           <Drawer.Screen name="PlatillosPage" component={PlatillosPage} />
           <Drawer.Screen name="Almacen" component={AlmacenPage} />
-          <Drawer.Screen name="ProfilePage" component={ProfilePage} />
+          <Drawer.Screen name="ProfilePage" component={ProfilePage} initialParams={route.params}/>
         </Drawer.Navigator>
     );
 }
