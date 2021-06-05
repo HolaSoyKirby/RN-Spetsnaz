@@ -1,44 +1,38 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import firebase from '../utils/firebase';
-import {validateEmail} from '../utils/validation';
 
 export default function RegisterPage({navigation}){
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
 
     const register = () => {
         setEmailError('');
-        if(!email) {
-            setEmailError('Ingrese un Correo Electrónico');
-        }
-        else if (!password) {
-            setEmailError('Ingrese una Contraseña');
-        }
-        else if (!validateEmail(email)) {
-            setEmailError('Ingrese un Correo Electrónico Válido');
-        }
-        else if(password.length < 6){
-            setEmailError('Ingrese una contraseña de 6 caracteres mínimo');
-        }
-        else {
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    console.log('cuenta creada');
-                    navigation.replace('MenuNavigation', {
-                        screen: 'PlatillosPage',
-                        params: { user: email },
-                      });
-                })
-                .catch((error)=>{
-                    console.log(error.message);
-                    setEmailError(error.message);
-                });
-        }
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            console.log('cuenta creada');
+            navigation.replace('MenuNavigation', {user: email});
+
+        })
+        .catch((error)=>{
+            console.log(JSON.stringify(error));
+            setEmailError(mensajeError(error.code));
+        });
     }
 
-
+    const mensajeError = (error) => {
+        switch (error) {
+            case "auth/email-already-in-use":
+                return "El correo ingresado ya está en uso";
+            case "auth/invalid-email":
+                return "Ingrese un correo válido";
+            case "auth/weak-password":
+                return "La contraseña debe tener un mínimo de 6 caracteres";
+            default:
+                return error.toString();
+        }
+    }
 
     return(
         <>
@@ -52,6 +46,7 @@ export default function RegisterPage({navigation}){
                     <TextInput
                         placeholder = "Tu usuario"
                         style={styles.formTextInput}
+                        keyboardType='email-address'
                         onChange={(e)=>{
                             setEmail(e.nativeEvent.text);
                             console.log(email);
@@ -94,7 +89,6 @@ const styles = StyleSheet.create({
     formView: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: '20%',
         marginTop: 50
     },
     registrarseText: {
@@ -121,7 +115,11 @@ const styles = StyleSheet.create({
         color: 'red', 
         textAlign: 'center',
         fontSize: 18,
-        marginBottom: 15
+        marginBottom: 15,
+        height: 70,
+        marginLeft: 20,
+        marginRight: 20,
+        textAlignVertical: 'center'
     },
 
     ///////////// BUTTON /////////////

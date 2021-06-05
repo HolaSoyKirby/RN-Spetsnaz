@@ -52,6 +52,7 @@ const ingredientes = [
       },
 ];
 
+
 export default function AlmacenPage({navigation}){
 
     return(

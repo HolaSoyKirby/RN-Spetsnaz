@@ -1,36 +1,35 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import firebase from '../utils/firebase';
-import {validateEmail} from '../utils/validation';
 
 export default function LoginPage({navigation}){
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     
     const login = () => {
         setEmailError('');
-        if(!email) {
-                setEmailError('Ingrese su correo');
-            }
-        else if(!password){
-                setEmailError('Ingrese su contraseña');
-            console.log('Error');
-        }
-        else if(!validateEmail(email)){
-            setEmailError('Ingrese un correo válido');
-            console.log('Error');
-        }
-        else{
-            firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(()=>{
-                console.log("ok");
-                navigation.navigate('MenuNavigation', {user: email});
-            })
-            .catch((error)=>{
-                console.log(error.message);
-                setEmailError(error.message);
-            });
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(()=>{
+            console.log("ok");
+            navigation.navigate('MenuNavigation', {user: email});
+        })
+        .catch((error)=>{
+            console.log(JSON.stringify(error));
+            setEmailError(mensajeError(error.code));
+        });
+    }
+
+    const mensajeError = (error) => {
+        switch (error) {
+            case "auth/invalid-email":
+                return "Ingrese un correo válido";
+            case "auth/wrong-password":
+                return "Contraseña incorrecta";
+            case "auth/user-not-found":
+                return "El correo ingresado no ha sido registrado";
+            default:
+                return error.toString();
         }
     }
 
@@ -54,6 +53,7 @@ export default function LoginPage({navigation}){
                 <TextInput
                     placeholder = "Tu usuario"
                     style={styles.formTextInput}
+                    keyboardType='email-address'
                     onChange={(e)=>{
                         setEmail(e.nativeEvent.text);
                         console.log(email);
@@ -77,8 +77,8 @@ export default function LoginPage({navigation}){
             <TouchableOpacity
                 style={styles.loginButtonView}
                 onPress = {() => {
-                    login();
-                    //navigation.navigate('MenuNavigation');
+                    //login();
+                    navigation.navigate('MenuNavigation', {user: 'email'});
                 }
                     }>
                 <Text
@@ -115,8 +115,7 @@ const styles = StyleSheet.create({
     /////////////// FORM ////////////////
     formView: {
         marginLeft: 20,
-        marginRight: 20,
-        marginBottom: 20
+        marginRight: 20
     },
     ingresarText: {
         fontSize: 20,
@@ -140,7 +139,11 @@ const styles = StyleSheet.create({
         color: 'red', 
         textAlign: 'center',
         fontSize: 18,
-        marginBottom: 15
+        marginBottom: 15,
+        height: 70,
+        marginLeft: 20,
+        marginRight: 20,
+        textAlignVertical: 'center'
     },
 
     ////////////// BUTTON //////////////
