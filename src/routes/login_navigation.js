@@ -22,8 +22,8 @@ export default function LoginNavigation() {
       <Stack.Screen name = "LoginPage" component={LoginPage} />
       <Stack.Screen name = "MenuNavigation" component = {MenuNavigation}/>
       <Stack.Screen name = "RegisterPage" component = {RegisterPage}/>
-      <Stack.Screen name = "AgregarPlatillo" component = {AgregarPlatPage}/>
       <Stack.Screen name = "AgregarIngrediente" component = {AgregarIngredientePage}/>
+      <Stack.Screen name = "AgregarPlatillo" component = {AgregarPlatPage}/>
       <Stack.Screen name = "IngredientesPlatillo" component = {IngredientesPlatilloPage}/>
       <Stack.Screen name = "AgregarCantidad" component = {AgregarCantPage}/>
     </Stack.Navigator>

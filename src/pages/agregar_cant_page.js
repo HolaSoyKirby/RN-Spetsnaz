@@ -1,45 +1,141 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, View, Text, TextInput, TouchableOpacity} from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
+import firebase from '../utils/firebase';
 
-export default function AgregarCantPage({navigation}){
+export default function AgregarCantPage({navigation, route}){
+    const { ing, onGoBack } = route.params;
+
+    const [cantidad, setCantidad] = useState(0);
+    const [opcion, setOpcion] = useState(null);
+    const [textError, setTextError] = useState('');
+    let opciones = [];
+
+    if(ing.uMedida == 'g' || ing.uMedida == 'Kg'){
+        opciones = [
+            { label: "Gramos", value: 'g' },
+            { label: "Kilogramos", value: 'Kg' }
+        ];
+    } else {
+        opciones = [
+            { label: "Mililitros", value: 'ml' },
+            { label: "Litros", value: 'L' }
+        ];
+    }
+
+    const updateIngrediente = async () => {
+        setTextError('');
+        if(cantidad <= 0){
+            setTextError('Ingrese una cantidad válida');
+            return;
+        }
+
+        if(opcion == null){
+            setTextError('Seleccione una unidad de medida');
+            return;
+        }
+
+        let cantFinal = cantidad;
+
+        if(opcion == 'Kg' || opcion == 'L'){
+            cantFinal *= 1000;
+        }
+
+        try{
+            const doc = firebase.firestore().collection('almacen').doc(ing.id);
+            const getIng = await doc.get();
+            const ingrediente = getIng.data();
+            console.log(ingrediente);
+
+            cantFinal += ingrediente.cantidad;
+            console.log('Cantfinal: ', cantFinal);
+
+            await doc.update({
+                cantidad: cantFinal
+            });
+
+            onGoBack();
+            navigation.goBack();
+        }catch(e){
+            setTextError("Error: " + toString(e));
+        }
+    }
+
     return(
     <>
         <View style={styles.ingredienteView}>
             <Text 
-            style={styles.ingredienteText}> Nombre Ingrediente </Text>
+            style={styles.ingredienteText}>{ ing.ingrediente }</Text>
         </View>
         <View style={styles.restanteView}>
-            <Text style={styles.restanteText}> 5 kg restante</Text>
+            <Text style={styles.restanteText}>{ `${ing.cantidad} ${ing.uMedida} restante` }</Text>
         </View>
         <View style={styles.agregarCantidadView}>
             <Text
             style={styles.agregarCantidadText}> Agregar cantidad</Text>
-            <TextInput placeholder='Cantidad' style={styles.formTextInput}/>
+            <TextInput 
+            placeholder='Cantidad'
+            keyboardType='numeric' 
+            style={styles.formTextInput}
+            onChange={(e) => {
+                let cant = parseFloat(e.nativeEvent.text);
+                if(isNaN(cant)){
+                    setCantidad(0);
+                }else{
+                    setCantidad(cant);
+                }
+                console.log(cantidad);
+            }}/>
             <RNPickerSelect
-                    onValueChange={(value) => console.log(value)}
-                    style={pickerSelectStyles}
+                    onValueChange={(value) => {
+                        setOpcion(value);    
+                        console.log(opcion);
+                    }}
+                    style={{
+                        ...pickerSelectStyles,
+                        iconContainer:{////////////////ICONO
+                            top:20,
+                            right:10
+                        },
+                    placeholder:{
+                        color: 'black',
+                        fontWeight:'bold',
+                        fontSize:18
+                    }
+                    }}
                     placeholder={{
                         label: "Unidad de medida",
                         value: null
                     }}
-                    placeholderTextColor="black"
-                    items={[
-                        { label: "Gramos", value: 'g' },
-                        { label: "Cucharadas (sólidos)", value: 'cucharadasS' },
-                        { label: "Tazas (sólidos)", value: 'tazasS' },
-                        { label: "Kilogramos", value: 'kg' },
-                        { label: "Mililitros", value: 'ml' },
-                        { label: "Cucharadas (líquidos)", value: 'cucharadasL' },
-                        { label: "Tazas (líquidos)", value: 'tazasL' },
-                        { label: "Litros", value: 'L' }
-                    ]}
+                    //placeholderTextColor="black"
+                    items={opciones}
+                    Icon={() => {//////////////////ICONO
+                        return (
+                          <View
+                            style={{
+                              backgroundColor: 'transparent',
+                              borderTopWidth: 10,
+                              borderTopColor: 'gray',
+                              borderRightWidth: 10,
+                              borderRightColor: 'transparent',
+                              borderLeftWidth: 10,
+                              borderLeftColor: 'transparent',
+                              width: 0,
+                              height: 0,
+                            }}
+                          />
+                        );
+                      }}
                 />
         </View>
+        <Text style={styles.textError}>{textError}</Text>
         <View>
         <TouchableOpacity
                 style={styles.ingredienteButtonAgregar}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                    updateIngrediente();
+                    //navigation.goBack()
+                }}
                 >
                 <Text
                 style={styles.text}
@@ -89,6 +185,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         borderBottomWidth: 2,
         borderBottomColor: '#aaaaaa'
+    },
+
+    textError: {
+        color: 'red', 
+        textAlign: 'center',
+        fontSize: 18,
+        marginBottom: 15,
+        height: 70,
+        marginLeft: 20,
+        marginRight: 20,
+        textAlignVertical: 'center'
     },
 
     //////BUTTON//////

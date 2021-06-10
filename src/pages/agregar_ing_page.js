@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
+import firebase from '../utils/firebase';
 
-export default function AgregarIngPage({navigation}){
+export default function AgregarIngPage({navigation, route}){
+    const { onGoBack } = route.params;
 
     const [nombreIngrediente, setNombreIngrediente] = useState('');
     const [cantidadIngrediente, setCantidadIngrediente] = useState(0);
     const [unidadMedida, setUnidadMedida] = useState(null);
     const [textError, setTextError] = useState('');
+    
+    let finalMedida = null;
+    let finalCantidad = 0;
 
-    const crearIngrediente = () => {
+    const crearIngrediente = async () => {
         setTextError('');
         if(nombreIngrediente == ''){
             setTextError('Ingrese el nombre del ingrediente');
@@ -26,17 +31,36 @@ export default function AgregarIngPage({navigation}){
             return;
         }
 
-        if(unidadMedida == 'Kg' || unidadMedida == 'L'){
-            setCantidadIngrediente(cantidadIngrediente*1000);
-            if(unidadMedida == 'Kg'){
-                setUnidadMedida('g');
+        finalMedida = unidadMedida;
+        finalCantidad = cantidadIngrediente;
+
+        if(finalMedida == 'Kg' || finalMedida == 'L'){
+            finalCantidad = cantidadIngrediente * 1000;
+            if(finalMedida == 'Kg'){
+                finalMedida = 'g';
             }else{
-                setUnidadMedida('ml');
+                finalMedida = 'ml';
             }
         }
 
-        console.log(`Cantidad: ${cantidadIngrediente} ${unidadMedida}`);
-        setTextError(`Cantidad: ${cantidadIngrediente} ${unidadMedida}`);
+        console.log(`Cantidad: ${finalCantidad} ${finalMedida}`);
+        setTextError(`Cantidad: ${finalCantidad} ${finalMedida}`);
+
+        try{
+            await firebase.firestore().collection('almacen').add({
+                ingrediente: nombreIngrediente,
+                cantidad: finalCantidad,
+                uMedida: finalMedida
+            });
+
+            console.log('Subido');
+            onGoBack();
+            navigation.goBack();
+
+        }catch(e){
+            setTextError(toString(e));
+        }
+
     }
 
     return(
@@ -55,7 +79,7 @@ export default function AgregarIngPage({navigation}){
                     style={styles.formTextInput}
                     onChange={(e) => {
                         setNombreIngrediente(e.nativeEvent.text);
-                        console.log(e);
+                        console.log(e.nativeEvent.text);
                     }} />
                 <Text
                     style = {styles.formText}>Cantidad:</Text>
@@ -125,7 +149,6 @@ export default function AgregarIngPage({navigation}){
                 style={styles.ingredienteButtonView}
                 onPress={() => {
                     crearIngrediente();
-                    //navigation.goBack();
                 }}
                 >
                 <Text

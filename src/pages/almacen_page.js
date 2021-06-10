@@ -1,83 +1,72 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-
-const ingredientes = [
-    {
-      Nombre: 'Ingrediente 1',
-      Cantidad: '20 kg',
-    },
-    {
-        Nombre: 'Ingrediente 2',
-        Cantidad: '20 kg',
-    },
-    {
-        Nombre: 'Ingrediente 3',
-        Cantidad: '200 g',
-    },
-    {
-        Nombre: 'Ingrediente 4',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 5',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 6',
-          Cantidad: '200 g',
-      },
-      {
-        Nombre: 'Ingrediente 7',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 8',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 9',
-          Cantidad: '200 g',
-      },
-      {
-        Nombre: 'Ingrediente 10',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 11',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 12',
-          Cantidad: '200 g',
-      },
-];
-
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import firebase from '../utils/firebase';
 
 export default function AlmacenPage({navigation}){
+    const [ingredientes, setIngredientes] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getIngredientes();
+    }, []);
+
+    const getIngredientes = async () => {
+        setLoading(true);
+
+        let ings = [];
+        let snapshot = await firebase.firestore().collection("almacen").get();
+        snapshot.forEach((doc) => {
+            let cant = doc.data().cantidad;
+            let uMed = doc.data().uMedida;
+            if(cant >= 1000){
+                cant /= 1000;
+                if(uMed == 'g'){
+                    uMed = 'Kg';
+                }else{
+                    uMed = 'L';
+                }
+            }
+            ings.push({
+                id: doc.id,
+                ingrediente: doc.data().ingrediente,
+                cantidad: cant,
+                uMedida: uMed
+            });
+            console.log("id ", doc.id);
+        });
+
+        ings.sort((a,b)=> (a.ingrediente > b.ingrediente ? 1 : -1));
+
+        setIngredientes(ings);
+        console.log(ingredientes);
+
+        setLoading(false);
+    }
 
     return(
         <>
+            <ActivityIndicator size="large" animating={loading} color="#ff0000"/>
             <View
                 style={styles.formView}>
                 <Text
                     style={styles.almacenText}>Almacén</Text>
             </View>
-            <FlatList 
+            <FlatList
             style={styles.list}
             data={ingredientes}
             renderItem={({ item }) => (
                 <TouchableOpacity
-                    onPress = {()=>navigation.navigate('AgregarCantidad')}>
+                    onPress = {()=>navigation.navigate('AgregarCantidad', { ing: item, onGoBack: getIngredientes })}>
                     <View style={styles.elementView}>
-                        <Text style={styles.elementText1}>{item.Nombre}</Text>
-                        <Text style={styles.elementText2}>{item.Cantidad}</Text>
+                        <Text style={styles.elementText1}>{item.ingrediente}</Text>
+                        <Text style={styles.elementText2}>{`${item.cantidad} ${item.uMedida}`}</Text>
                     </View>
                 </TouchableOpacity>
-              )}
-            keyExtractor={item => `${item.Nombre}`}/>
+            )}
+            keyExtractor={item => `${item.id}`}/>
             <TouchableOpacity
                 style={styles.addButton}
-                onPress = {()=>navigation.navigate('AgregarIngrediente')}>
+                onPress = {()=>navigation.navigate('AgregarIngrediente', { onGoBack:  getIngredientes })}>
                     <Text
                         style= {styles.addButtonText}>+</Text>
             </TouchableOpacity>
@@ -86,9 +75,17 @@ export default function AlmacenPage({navigation}){
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center"
+      },
+      horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
+      },
     /////////////// TITLE ////////////////
     formView: {
-        marginTop: 40,
         marginBottom: 15,
         marginLeft: 20
     },

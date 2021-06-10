@@ -10,9 +10,9 @@ const Drawer = createDrawerNavigator();
 export default function MenuNavigation({navigation, route}) {
 
     return (
-        <Drawer.Navigator initialRouteName="PlatillosPage">
+        <Drawer.Navigator initialRouteName="Almacen">
+                    <Drawer.Screen name="Almacen" component={AlmacenPage} />
           <Drawer.Screen name="PlatillosPage" component={PlatillosPage} />
-          <Drawer.Screen name="Almacen" component={AlmacenPage} />
           <Drawer.Screen name="ProfilePage" component={ProfilePage} initialParams={route.params}/>
         </Drawer.Navigator>
     );

@@ -1,73 +1,42 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
-
-const ingredientes = [
-    {
-      Nombre: 'Platillo 1'
-    },
-    {
-        Nombre: 'Platillo 2'
-    },
-    {
-        Nombre: 'Platillo 3'
-    },
-    {
-        Nombre: 'Platillo 4'
-      },
-      {
-          Nombre: 'Platillo 5'
-      },
-      {
-          Nombre: 'Platillo 6'
-      },
-      {
-        Nombre: 'Platillo 7'
-      },
-      {
-          Nombre: 'Platillo 8'
-      },
-      {
-          Nombre: 'Platillo 9'
-      },
-      {
-          Nombre: 'Platillo 10'
-      },
-      {
-          Nombre: 'Platillo 11'
-      },
-      {
-          Nombre: 'Platillo 12'
-      },
-      {
-        Nombre: 'Platillo 13'
-    },
-    {
-        Nombre: 'Platillo 14'
-    },
-    {
-        Nombre: 'Platillo 15'
-    },
-    {
-        Nombre: 'Platillo 16'
-    },
-    {
-        Nombre: 'Platillo 17'
-    },
-    {
-        Nombre: 'Platillo 18'
-    },
-    {
-        Nombre: 'Platillo 19'
-    },
-    {
-        Nombre: 'Platillo 20'
-    }
-];
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import firebase from '../utils/firebase';
 
 export default function PlatillosPage({navigation}){
+    const [platillos, setPlatillos] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getPlatillos();
+    }, []);
+
+    const getPlatillos = async () => {
+        setLoading(true);
+
+        let plats = [];
+        let snapshot = await firebase.firestore().collection("platillos").get();
+        snapshot.forEach((doc) => {
+            console.log(doc.data());
+       
+            plats.push({
+                id: doc.id,
+                nombreP: doc.data().nombreP,
+                ingredientes: doc.data().ingredientes
+            });
+            console.log("id ", doc.id);
+        });
+
+        plats.sort((a,b)=> (a.ingrediente > b.ingrediente ? 1 : -1));
+
+        setPlatillos(plats);
+        console.log(platillos);
+
+        setLoading(false);
+    }
 
     return(
         <>
+            <ActivityIndicator size="large" color="#ff0000" animating={loading}/>
             <View
                 style={styles.formView}>
                 <Text
@@ -75,12 +44,12 @@ export default function PlatillosPage({navigation}){
             </View>
             <FlatList 
             style={styles.list}
-            data={ingredientes}
+            data={platillos}
             renderItem={({ item }) => (
                 <View style={styles.elementView}>
                     <TouchableOpacity
                     onPress = {()=>navigation.navigate('IngredientesPlatillo')}>
-                    <Text style={styles.elementText1}>{item.Nombre}</Text>
+                    <Text style={styles.elementText1}>{item.nombreP}</Text>
                     </TouchableOpacity>
                 </View>
               )}
@@ -98,7 +67,6 @@ export default function PlatillosPage({navigation}){
 const styles = StyleSheet.create({
     /////////////// TITLE ////////////////
     formView: {
-        marginTop: 40,
         marginBottom: 15,
         marginLeft: 20
     },
