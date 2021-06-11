@@ -3,8 +3,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-nativ
 import RNPickerSelect from "react-native-picker-select";
 import firebase from '../utils/firebase';
 
-export default function AgregarIngPage({navigation, route}){
-    const { onGoBack } = route.params;
+export default function AgregarIngPage({navigation}){
 
     const [nombreIngrediente, setNombreIngrediente] = useState('');
     const [cantidadIngrediente, setCantidadIngrediente] = useState(0);
@@ -54,7 +53,6 @@ export default function AgregarIngPage({navigation, route}){
             });
 
             console.log('Subido');
-            onGoBack();
             navigation.goBack();
 
         }catch(e){

@@ -10,6 +10,14 @@ export default function PlatillosPage({navigation}){
         getPlatillos();
     }, []);
 
+    React.useEffect(() => {
+        navigation.addListener('focus', () => {
+          // The screen is focused
+          // Call any action
+          getPlatillos();
+        });
+      }, []);
+
     const getPlatillos = async () => {
         setLoading(true);
 
@@ -48,12 +56,12 @@ export default function PlatillosPage({navigation}){
             renderItem={({ item }) => (
                 <View style={styles.elementView}>
                     <TouchableOpacity
-                    onPress = {()=>navigation.navigate('IngredientesPlatillo')}>
+                    onPress = {()=>navigation.navigate('IngredientesPlatillo', {platillo: item})}>
                     <Text style={styles.elementText1}>{item.nombreP}</Text>
                     </TouchableOpacity>
                 </View>
               )}
-            keyExtractor={item => `${item.Nombre}`}/>
+            keyExtractor={item => `${item.nombreP}`}/>
             <TouchableOpacity
                 style={styles.addButton}
                 onPress = {()=>navigation.navigate('AgregarPlatillo')}>

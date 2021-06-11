@@ -11,6 +11,7 @@ import RNPickerSelect from "react-native-picker-select";
 import firebase from '../utils/firebase';
 
 export default function AgregarPlatPage({ navigation }) {
+
   const [nombrePlatillo, setNombrePlatillo] = useState('');
   const [ingredientesPlatillo, setIngredientesPlatillo] = useState([]);
   let ingreds = [];
@@ -23,7 +24,7 @@ export default function AgregarPlatPage({ navigation }) {
   const [cantidad, setCantidad] = useState('');
   const [cantFinal, setCantFinal] = useState(0);
 
-  const [textError, setTextError] = useState('Error');
+  const [textError, setTextError] = useState('');
   
   useEffect(() => {
     getAllIngredientes();
@@ -43,7 +44,7 @@ export default function AgregarPlatPage({ navigation }) {
         });
     });
 
-    ings.sort((a,b)=> (a.ingrediente > b.ingrediente ? 1 : -1));
+    ings.sort((a,b)=> (a.label > b.label ? 1 : -1));
     setIngredientes(ings);
     console.log(ingredientes);
 
@@ -109,12 +110,7 @@ export default function AgregarPlatPage({ navigation }) {
       });
 
       console.log('Subido');
-      
-      /*
-      onGoBack();
       navigation.goBack();
-      */
-
     }catch(e){
       setTextError(toString(e));
     }

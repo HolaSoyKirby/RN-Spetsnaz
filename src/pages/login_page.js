@@ -78,7 +78,7 @@ export default function LoginPage({navigation}){
                 style={styles.loginButtonView}
                 onPress = {() => {
                     //login();
-                    navigation.navigate('MenuNavigation', {user: 'email'});
+                    navigation.navigate('MenuNavigation', {user: email});
                 }
                     }>
                 <Text

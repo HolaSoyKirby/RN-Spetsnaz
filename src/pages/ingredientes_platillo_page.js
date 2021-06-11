@@ -1,78 +1,121 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import firebase from '../utils/firebase';
 
-const ingredientes = [
-    {
-      Nombre: 'Ingrediente 1',
-      Cantidad: '20 kg',
-    },
-    {
-        Nombre: 'Ingrediente 2',
-        Cantidad: '20 kg',
-    },
-    {
-        Nombre: 'Ingrediente 3',
-        Cantidad: '200 g',
-    },
-    {
-        Nombre: 'Ingrediente 4',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 5',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 6',
-          Cantidad: '200 g',
-      },
-      {
-        Nombre: 'Ingrediente 7',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 8',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 9',
-          Cantidad: '200 g',
-      },
-      {
-        Nombre: 'Ingrediente 10',
-        Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 11',
-          Cantidad: '20 kg',
-      },
-      {
-          Nombre: 'Ingrediente 12',
-          Cantidad: '200 g',
-      },
-];
+export default function IngredientesPlatilloPage({navigation, route}){
+    const { platillo } = route.params;
 
-export default function IngredientesPlatilloPage({navigation}){
+    const prepararPlatillo = async () => {
+        let showAlert = false;
+
+        let almacen = [];
+        let ingsActualizados = [];
+
+        const docs = firebase.firestore().collection('almacen');
+
+        for(const ing of platillo.ingredientes){
+            const doc = docs.doc(ing.IdIng);
+            const getIng = await doc.get();
+
+            let cantProcesada = ing.cantidad;
+            if(ing.uMedida == 'c'){
+                cantProcesada *= 15;
+            }else if(ing.uMedida == 't'){
+                cantProcesada *= 250;
+            }else if(ing.uMedida == 'Kg' || ing.uMedida == 'L'){
+                cantProcesada *= 1000;
+            }
+
+            almacen.push({
+                id: ing.IdIng,
+                ...getIng.data(),
+                cantProcesada});
+        }
+
+        console.log("INGS ALMACEN");
+        console.log(almacen);
+
+        console.log("\nINGREDIENTES");
+        console.log(platillo.ingredientes);
+
+        almacen.forEach((ing) => {
+            let cantFinal = ing.cantidad - ing.cantProcesada;
+
+            if(cantFinal <= 0){
+                cantFinal = 0;
+                showAlert = true;
+            }
+
+            ingsActualizados.push({
+                id: ing.id,
+                cant: cantFinal
+            });
+        });
+
+        console.log("\nFINAL");
+        console.log(ingsActualizados);
+
+        if(showAlert){
+            Alert.alert(
+                "Alerta",
+                `No tienes los suficientes ingredientes para preparar ${platillo.nombreP}, ¿desea prepararlo de todas formas?`,
+                [
+                  {
+                    text: "NO",
+                    onPress: () => {
+                        console.log("\nRECHAZADO");
+                        navigation.goBack();
+                    },
+                    style: "cancel"
+                  },
+                  { text: "SI", onPress: async () => {
+                    for(const ing of ingsActualizados){
+                        const doc = docs.doc(ing.id);
+                        await doc.update({
+                            cantidad: ing.cant
+                        });
+                    }
+                    console.log("\nACTUALIZADO");
+                    navigation.goBack();
+                  } }
+                ]
+            );
+        }else{
+            for(const ing of ingsActualizados){
+                const doc = docs.doc(ing.id);
+                await doc.update({
+                    cantidad: ing.cant
+                });
+            }
+            console.log("\nACTUALIZADO");
+            navigation.goBack();
+        }
+        
+    }    
+
     return(
         <>
             <View style={styles.formView}>
-                <Text style={styles.agregarText}>Nombre Platillo</Text>
+                <Text style={styles.agregarText}>{platillo.nombreP}</Text>
             </View>
             <View style={styles.listaView}>
                 <Text style={styles.titleLista}>Ingredientes</Text>
                 <FlatList
-                data={ingredientes}
+                data={platillo.ingredientes}
                 renderItem={({ item }) => (
-                <View>
-                    <Text style={styles.elementLista}>-  {item.Cantidad} {item.Nombre}</Text>
-                </View>
-              )}
-            keyExtractor={item => `${item.Nombre}`}/>
+                    <View>
+                        <Text style={styles.elementLista}>{`-  ${item.cantidad} ${item.uMedida} ${item.nombreIng}`}</Text>
+                    </View>
+                )}
+                keyExtractor={item => `${item.IdIng}`}/>
             </View>
             <TouchableOpacity
                 style={styles.ingredienteButtonView}
-                onPress={() => {navigation.goBack()}}
+                onPress={() => {
+                    prepararPlatillo();
+                    //navigation.goBack();
+                }}
                 >
         <Text style={styles.ingText}>Preparar Platillo</Text>
       </TouchableOpacity>

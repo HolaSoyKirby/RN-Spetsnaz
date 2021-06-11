@@ -4,7 +4,7 @@ import RNPickerSelect from "react-native-picker-select";
 import firebase from '../utils/firebase';
 
 export default function AgregarCantPage({navigation, route}){
-    const { ing, onGoBack } = route.params;
+    const { ing } = route.params;
 
     const [cantidad, setCantidad] = useState(0);
     const [opcion, setOpcion] = useState(null);
@@ -54,7 +54,6 @@ export default function AgregarCantPage({navigation, route}){
                 cantidad: cantFinal
             });
 
-            onGoBack();
             navigation.goBack();
         }catch(e){
             setTextError("Error: " + toString(e));

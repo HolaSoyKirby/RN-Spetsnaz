@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import firebase from '../utils/firebase';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AlmacenPage({navigation}){
     const [ingredientes, setIngredientes] = useState([]);
@@ -8,6 +9,14 @@ export default function AlmacenPage({navigation}){
 
     useEffect(() => {
         getIngredientes();
+    }, []);
+
+    React.useEffect(() => {
+      navigation.addListener('focus', () => {
+        // The screen is focused
+        // Call any action
+        getIngredientes();
+      });
     }, []);
 
     const getIngredientes = async () => {
@@ -56,7 +65,7 @@ export default function AlmacenPage({navigation}){
             data={ingredientes}
             renderItem={({ item }) => (
                 <TouchableOpacity
-                    onPress = {()=>navigation.navigate('AgregarCantidad', { ing: item, onGoBack: getIngredientes })}>
+                    onPress = {()=>navigation.navigate('AgregarCantidad', { ing: item })}>
                     <View style={styles.elementView}>
                         <Text style={styles.elementText1}>{item.ingrediente}</Text>
                         <Text style={styles.elementText2}>{`${item.cantidad} ${item.uMedida}`}</Text>
@@ -66,7 +75,7 @@ export default function AlmacenPage({navigation}){
             keyExtractor={item => `${item.id}`}/>
             <TouchableOpacity
                 style={styles.addButton}
-                onPress = {()=>navigation.navigate('AgregarIngrediente', { onGoBack:  getIngredientes })}>
+                onPress = {()=>navigation.navigate('AgregarIngrediente')}>
                     <Text
                         style= {styles.addButtonText}>+</Text>
             </TouchableOpacity>
