@@ -77,8 +77,8 @@ export default function LoginPage({navigation}){
             <TouchableOpacity
                 style={styles.loginButtonView}
                 onPress = {() => {
-                    //login();
-                    navigation.navigate('MenuNavigation', {user: email});
+                    login();
+                    //navigation.navigate('MenuNavigation', {user: email});
                 }
                     }>
                 <Text
