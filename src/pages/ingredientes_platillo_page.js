@@ -42,7 +42,7 @@ export default function IngredientesPlatilloPage({navigation, route}){
         almacen.forEach((ing) => {
             let cantFinal = ing.cantidad - ing.cantProcesada;
 
-            if(cantFinal <= 0){
+            if(cantFinal < 0){
                 cantFinal = 0;
                 showAlert = true;
             }
